@@ -976,7 +976,11 @@ namespace LitJson
                 if (((IDictionary)this).Contains(name))
                 {
                     IJsonWrapper wrapper = this[name];
-                    if (wrapper.IsObject)
+                    if(wrapper == null)
+                    {
+                        fi.SetValue(instance, null);
+                    }
+                    else if (wrapper.IsObject)
                     {
                         fi.SetValue(instance, wrapper.ToObject(fi.FieldType));
                     }
@@ -992,7 +996,7 @@ namespace LitJson
                             list = (IList)Activator.CreateInstance(fi.FieldType, len);
                             for (int i = 0; i < len; i++)
                             {
-                                list[i] = ((IJsonWrapper)wrapperList[i]).ToObject(elem_type);
+                                list[i] = wrapperList[i] == null ? null : ((IJsonWrapper)wrapperList[i]).ToObject(elem_type);
                             }
                         }
                         else
@@ -1001,7 +1005,7 @@ namespace LitJson
                             list = (IList)Activator.CreateInstance(fi.FieldType);
                             for (int i = 0; i < len; i++)
                             {
-                                list.Add(((IJsonWrapper)wrapperList[i]).ToObject(elem_type));
+                                list.Add(wrapperList[i] == null ? null : ((IJsonWrapper)wrapperList[i]).ToObject(elem_type));
                             }
                         }
                         fi.SetValue(instance, list);
@@ -1020,7 +1024,11 @@ namespace LitJson
                 if (pi.CanWrite && ((IDictionary)this).Contains(name))
                 {
                     IJsonWrapper wrapper = this[name];
-                    if (wrapper.IsObject)
+                    if(wrapper == null)
+                    {
+                        pi.SetValue(instance, null, null);
+                    }
+                    else if (wrapper.IsObject)
                     {
                         pi.SetValue(instance, wrapper.ToObject(pi.PropertyType), null);
                     }
@@ -1036,7 +1044,7 @@ namespace LitJson
                             list = (IList)Activator.CreateInstance(pi.PropertyType, len);
                             for (int i = 0; i < len; i++)
                             {
-                                list[i] = ((IJsonWrapper)wrapperList[i]).ToObject(elem_type);
+                                list[i] = wrapperList[i] == null ? null : ((IJsonWrapper)wrapperList[i]).ToObject(elem_type);
                             }
                         }
                         else
@@ -1045,7 +1053,7 @@ namespace LitJson
                             list = (IList)Activator.CreateInstance(pi.PropertyType, len);
                             for (int i = 0; i < len; i++)
                             {
-                                list.Add(((IJsonWrapper)wrapperList[i]).ToObject(elem_type));
+                                list.Add(wrapperList[i] == null ? null : ((IJsonWrapper)wrapperList[i]).ToObject(elem_type));
                             }
                         }
                         pi.SetValue(instance, list, null);
